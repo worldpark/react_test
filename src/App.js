@@ -7,6 +7,8 @@ function App() {
 
     let [goodCount, setGoodCount] = useState([0, 0, 0]);
 
+    let [modal, setModal] = useState([false, false, false]);
+
     const countPlus = (index) => {
         let copy = [...goodCount];
         copy[index] = copy[index] + 1;
@@ -29,31 +31,67 @@ function App() {
         setPost(copy);
     }
 
+    const viewModal = (i) => {
+        let copy = [...modal];
+        copy[i] = !copy[i];
+
+        setModal(copy);
+    }
+
     return (
         <div className="App">
             <div className="black-nav">
                 <h4>{title}</h4>
             </div>
             <button onClick={() => changeTitle(true)}>
-                change post
+                change post_main_branch
             </button>
             <button onClick={() => sortPost(true)}>
                 sort post
             </button>
-            <div className="list">
-                <h4>{post[0]} <span onClick={() =>  countPlus(0)}>좋아요</span> {goodCount[0]} </h4>
-                <div>redux</div>
-            </div>
-            <div className="list">
-                <h4>{post[1]} <span>좋아요</span> {goodCount[1]} </h4>
-                <div>redux</div>
-            </div>
-            <div className="list">
-                <h4>{post[2]} <span>좋아요</span> {goodCount[2]} </h4>
-                <div>redux</div>
-            </div>
+
+            {
+                post.map((content, i) => {
+                    return (
+                        <div className="list" key={i}>
+                            <div onClick={() => viewModal(i)}>
+                                <h4>{post[i]} <span onClick={() => countPlus(i)}>좋아요</span> {goodCount[i]} </h4>
+                                <div>redux</div>
+                            </div>
+                            {
+                                modal[i] ? <ModalFunc
+                                    color={'skyblue'}
+                                    index={i}
+                                    setPost={setPost}
+                                    post={post}/> : null
+                            }
+                        </div>
+                    )
+                })
+            }
         </div>
     );
+}
+
+const ModalFunc = (props) => {
+
+    const propsTest = () => {
+        let copy = [...props.post];
+
+        copy[props.index] = '으아아아';
+        props.setPost(copy);
+    }
+
+    return (
+        <>
+            <div className="modal" style={{background: props.color}}>
+                <h4>{props.post[props.index]}</h4>
+                <p>날짜</p>
+                <p>상세내용</p>
+                <button onClick={() => propsTest()}>글수정</button>
+            </div>
+        </>
+    )
 }
 
 export default App;
