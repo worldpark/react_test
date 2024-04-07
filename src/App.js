@@ -9,6 +9,8 @@ function App() {
 
     let [modal, setModal] = useState([false, false, false]);
 
+    let [inputText, setInputText] = useState('');
+
     const countPlus = (index) => {
         let copy = [...goodCount];
         copy[index] = copy[index] + 1;
@@ -38,6 +40,30 @@ function App() {
         setModal(copy);
     }
 
+    const addPost = (text) => {
+        let copy = [...post];
+        copy.push(text);
+
+        setPost(copy);
+
+        copy = [...goodCount];
+        copy.push(0);
+
+        setGoodCount(copy);
+    }
+
+    const deletePost = (index) => {
+        let copy = [...post];
+        copy.splice(index, 1);
+
+        setPost(copy);
+
+        copy = [...goodCount];
+        copy.splice(index, 1);
+
+        setGoodCount(copy);
+    }
+
     return (
         <div className="App">
             <div className="black-nav">
@@ -55,7 +81,8 @@ function App() {
                     return (
                         <div className="list" key={i}>
                             <div onClick={() => viewModal(i)}>
-                                <h4>{post[i]} <span onClick={() => countPlus(i)}>좋아요</span> {goodCount[i]} </h4>
+                                <h4>{post[i]} <span onClick={(e) => { e.stopPropagation(); countPlus(i)}}>좋아요</span> {goodCount[i]} </h4>
+                                <button onClick={(e) => {e.stopPropagation(); deletePost(i)}}>delete</button>
                                 <div>redux</div>
                             </div>
                             {
@@ -69,6 +96,13 @@ function App() {
                     )
                 })
             }
+
+            <input type="text"
+                   onChange={(e) => {
+                       setInputText(e.target.value)
+                   }}/>
+            <button onClick={() => addPost(inputText)}>add</button><br/>
+            {inputText}
         </div>
     );
 }
